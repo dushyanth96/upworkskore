@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy: UpworkSkore</title>
+  <meta name="description" content="UpworkSkore privacy policy. Scoring runs locally in your browser. Email is used for beta access and updates only. We never sell personal data." />
+  <link rel="icon" href="./favicon.ico" sizes="any" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('usk-theme');
+        var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <main id="main" class="legal">
+    <div class="wrap narrow">
+      <p><a class="back-link" href="./index.html">← Back to Home</a></p>
+      <h1>Privacy Policy</h1>
+      <p class="updated mono">Last updated: September 25, 2026</p>
+      <p class="lede">Short version: the extension scores jobs inside your browser. We collect almost nothing, and we sell nothing.</p>
+
+      <h2>1. Who controls your data</h2>
+      <p>The developer and data controller for UpworkSkore is <strong>Pragada Dushyanth (P Dushyanth)</strong>. For any privacy question or deletion request, email <a href="mailto:hello@upworkskore.com">hello@upworkskore.com</a>.</p>
+
+      <h2>2. What the extension does on your device</h2>
+      <p>UpworkSkore activates only on Upwork pages (<span class="mono">*://*.upwork.com/*</span>). It reads the job cards already visible in your browser tab and calculates client metrics from that visible text: total spent, hire rate, payment verification, jobs posted, and Connects required.</p>
+      <p>All scoring happens locally on your device. Your browsing history never leaves the browser. The extension does not touch your Upwork login, password, or account settings. It does not run on any other website.</p>
+
+      <h2>3. Account data we collect</h2>
+      <p>When you join the beta, we collect your email address. We use it only for three things: beta access, sign-in authentication through Supabase Auth, and product updates about UpworkSkore. The sign-in session token, your display preferences, and your local dashboard counts are stored in your own browser through extension storage.</p>
+
+      <h2>4. What we never collect</h2>
+      <p>We do not collect your browsing history, your Upwork messages, proposals, earnings, or anything outside the visible job content described above. We run no third-party analytics inside the extension.</p>
+
+      <h2>5. No data selling or sharing</h2>
+      <p>We do not sell, rent, or share your personal data or browsing history with third parties. The only external service involved is Supabase, which hosts authentication for sign-in and nothing else.</p>
+
+      <h2>6. How long we keep data</h2>
+      <p>Your email stays on file while your beta account is active. Ask for deletion at <a href="mailto:hello@upworkskore.com">hello@upworkskore.com</a> and the account record is removed. Scores and counts stored in your browser disappear when you remove the extension.</p>
+
+      <h2>7. Changes to this policy</h2>
+      <p>If this policy changes, the new version is posted on this page with a new date. Material changes are also announced by email to active beta testers.</p>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap foot-inner">
+      <span>© 2026 UpworkSkore</span>
+      <span class="foot-links"><a href="./privacy.html" aria-current="page">Privacy Policy</a><a href="./terms.html">Terms of Service</a><a href="./refund.html">Refund Policy</a></span>
+      <a href="mailto:hello@upworkskore.com">hello@upworkskore.com</a>
+    </div>
+  </footer>
+
+  <script src="./script.js" defer></script>
+</body>
+</html>

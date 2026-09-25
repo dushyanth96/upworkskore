@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UpworkSkore: Know the client before you bid</title>
+  <meta name="description" content="UpworkSkore scores each Upwork job 0 to 100 from client history on the page. Free beta: 10 seats, free for life." />
+  <link rel="icon" href="./favicon.ico" sizes="any" />
+  <meta property="og:title" content="UpworkSkore: Know the client before you bid" />
+  <meta property="og:description" content="A Chrome extension that scores each Upwork job 0 to 100 from client history on the page. Free beta: 10 seats, free for life." />
+  <meta property="og:type" content="website" />
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fbfbfa" />
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#07090e" />
+  <link rel="preload" href="./fonts/satoshi-700.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="./styles.css" />
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('usk-theme');
+        var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#top" aria-label="UpworkSkore home">
+        <img class="brand-mark" src="./logo.png" alt="UpworkSkore logo" width="28" height="28" />
+        <span class="brand-name">UpworkSkore</span>
+        <span class="brand-tag">beta</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#demo">Scores</a>
+        <a href="#roadmap">Roadmap</a>
+        <a href="#how">Install</a>
+        <a href="#bands">Bands</a>
+        <a href="#beta">Beta</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div class="nav-actions">
+        <button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch color mode" title="Switch color mode">
+          <span class="to-dark">Dark</span>
+          <span class="to-light">Light</span>
+        </button>
+        <a class="btn btn-primary btn-sm" href="#beta">Claim a free seat</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow mono">Founding beta · <span id="spotsLeft">7 of 10 seats open</span></p>
+          <h1>Know the client before you bid.</h1>
+          <p class="lede">UpworkSkore scores each job 0 to 100 from client history on the page, so Connects go to work that pays.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#beta">Claim a free seat <span class="arr" aria-hidden="true">→</span></a>
+            <a class="btn btn-ghost" href="#demo">How the score works</a>
+          </div>
+        </div>
+        <div class="hero-visual reveal" aria-label="UpworkSkore badges on three job cards">
+          <div class="browser">
+            <div class="browser-bar"><span></span><span></span><span></span><code class="mono">upwork.com/nx/search/jobs</code></div>
+            <div class="feed-card">
+              <button class="usk-badge green" type="button" aria-expanded="true"><strong class="mono">92</strong> · High Quality</button>
+              <p class="job-title">Internal dashboard in React + Supabase auth</p>
+              <div class="usk-details mono coll open">
+                <div><span>Total spent</span><strong>$32K+</strong></div>
+                <div><span>Hire rate</span><strong>88%</strong></div>
+                <div><span>Connects to apply</span><strong>12</strong></div>
+              </div>
+            </div>
+            <div class="feed-card">
+              <button class="usk-badge yellow" type="button" aria-expanded="false"><strong class="mono">68</strong> · Check the brief</button>
+              <p class="job-title">Webflow landing page, copy included</p>
+              <div class="usk-note coll shut"><span class="mono">PREVIEW</span> List view hides spend. Open the job page for the full breakdown.</div>
+            </div>
+            <div class="feed-card">
+              <button class="usk-badge red" type="button" aria-expanded="false"><strong class="mono">31</strong> · Skip</button>
+              <p class="job-title">Full-stack app, 16 Connects, client has spent $0</p>
+              <div class="usk-details mono coll shut">
+                <div><span>Total spent</span><strong>$0</strong></div>
+                <div><span>Hire rate</span><strong>18%</strong></div>
+                <div><span>Connects to apply</span><strong>16</strong></div>
+              </div>
+            </div>
+          </div>
+          <p class="caption">Try it: the badges open and close exactly like they do in the extension.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="factbar" aria-label="Product facts">
+      <div class="wrap factbar-inner">
+        <p>Chrome extension for Upwork search and job pages. Reads visible text only. Free for the 10 testers, forever.</p>
+        <p class="mono facts">Manifest V3 · No auto-bid · Feed + job page</p>
+      </div>
+    </section>
+
+    <section class="section" id="demo">
+      <div class="wrap">
+        <h2 class="reveal">The badge tells you where to look.</h2>
+        <p class="sub reveal">Sample scores on typical cards. Every badge opens the same six rows, so you can audit the number.</p>
+        <div class="demo-grid">
+          <article class="score-card green featured reveal">
+            <header><span class="mono big">92</span><span class="tier">High Quality</span></header>
+            <ul class="mono">
+              <li>Total spent <b>$32K+</b></li>
+              <li>Hire rate <b>88%</b></li>
+              <li>Jobs posted <b>46</b></li>
+              <li>Connects required <b>12</b></li>
+              <li>Connects risk <b>$1.80</b></li>
+              <li>Ghost ratio <b>12.4%</b></li>
+            </ul>
+            <p>Payment verified, 40 hires, replies within a day. Write this proposal first.</p>
+          </article>
+          <div class="demo-stack">
+            <article class="score-card yellow reveal" style="--d:.08s">
+              <header><span class="mono big">68</span><span class="tier">Check the brief</span></header>
+              <ul class="mono">
+                <li>Total spent <b>$1.2K+</b></li>
+                <li>Hire rate <b>54%</b></li>
+                <li>Ghost ratio <b>41.0%</b></li>
+              </ul>
+              <p>Two hires from nine posts. Bid only when the budget is funded.</p>
+            </article>
+            <article class="score-card red reveal" style="--d:.16s">
+              <header><span class="mono big">31</span><span class="tier">Skip</span></header>
+              <ul class="mono">
+                <li>Total spent <b>$0</b></li>
+                <li>Hire rate <b>18%</b></li>
+                <li>Connects risk <b>$2.40</b></li>
+              </ul>
+              <p>No hires, vague brief, 16 Connects to apply. Keep the $2.40.</p>
+            </article>
+          </div>
+        </div>
+        <p class="caption reveal">Grey means the client has no public history yet. The panel says so instead of guessing.</p>
+      </div>
+    </section>
+
+    <section class="section" id="roadmap">
+      <div class="wrap">
+        <p class="eyebrow mono">Roadmap</p>
+        <h2 class="reveal">The Beta Deal: V1 vs V2</h2>
+        <p class="sub reveal">Help us stress-test the V1 engine today. Get the V2 Pro upgrade free for life.</p>
+        <div class="compare-grid">
+          <article class="tier-card reveal">
+            <p><span class="pill-badge dark mono">Available now</span></p>
+            <h3>V1 Beta</h3>
+            <p class="tier-price"><span class="mono was">$14.99</span> <span class="mono">$0</span> 10 founding partner spots</p>
+            <ul class="tier-list">
+              <li>Live feed DOM scorer</li>
+              <li>Client true hire rate math</li>
+              <li>Connects ROI risk calculator</li>
+              <li>Ghost ratio detection</li>
+            </ul>
+          </article>
+          <article class="tier-card pro reveal" style="--d:.1s">
+            <p><span class="pill-badge live mono">In development</span></p>
+            <h3>V2 Pro</h3>
+            <p class="tier-price"><span class="mono">$14.99</span> lifetime license</p>
+            <ul class="tier-list">
+              <li>Everything in V1</li>
+              <li>Batch search page auto-scan</li>
+              <li>Auto-hide toxic clients from feed</li>
+              <li>Customizable risk thresholds</li>
+              <li>Lifetime Connects saved dashboard</li>
+            </ul>
+          </article>
+        </div>
+        <p class="anchor reveal">Founding Beta Partners receive lifetime V2 Pro access at $0.</p>
+      </div>
+    </section>
+
+    <section class="section alt" id="how">
+      <div class="wrap">
+        <h2 class="reveal">Running in under two minutes.</h2>
+        <ol class="steps">
+          <li class="reveal"><span class="mono">01</span><div><h3>Install and sign in</h3><p>Add the extension and sign in with your beta account. Nothing scores until you sign in.</p></div></li>
+          <li class="reveal" style="--d:.08s"><span class="mono">02</span><div><h3>Browse Upwork as usual</h3><p>Search pages and job pages get scored from text already in the page. No new tabs.</p></div></li>
+          <li class="reveal" style="--d:.16s"><span class="mono">03</span><div><h3>Read the number</h3><p>Toxic-only mode hides everything except red flags. Auto-expand keeps breakdowns open.</p></div></li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section" id="bands">
+      <div class="wrap">
+        <h2 class="reveal">What each band asks of you.</h2>
+        <div class="meters">
+          <div class="meter green reveal">
+            <div class="meter-head"><span class="chip">Green</span><code class="mono">82 to 97</code></div>
+            <div class="track"><div class="fill" style="width:90%"></div></div>
+            <p>Verified spend and a hire record. Write the proposal.</p>
+          </div>
+          <div class="meter yellow reveal" style="--d:.08s">
+            <div class="meter-head"><span class="chip">Yellow</span><code class="mono">55 to 79</code></div>
+            <div class="track"><div class="fill" style="width:67%"></div></div>
+            <p>Thin or mixed history. Read the brief twice before spending Connects.</p>
+          </div>
+          <div class="meter red reveal" style="--d:.16s">
+            <div class="meter-head"><span class="chip">Red</span><code class="mono">25 to 44</code></div>
+            <div class="track"><div class="fill" style="width:35%"></div></div>
+            <p>Ghost pattern or zero spend. Skip.</p>
+          </div>
+          <div class="meter grey reveal" style="--d:.24s">
+            <div class="meter-head"><span class="chip">Grey</span><code class="mono">no public history</code></div>
+            <div class="track empty"><span class="mono">no score</span></div>
+            <p>Unverified client. Price the risk before you bid.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="builder">
+      <div class="wrap narrow">
+        <div class="note-card reveal">
+          <p class="card-label">From the builder</p>
+          <p>I burned 16 Connects on a client who had spent $0 and never hired anyone. The history was sitting right there on the page. I just never scrolled down to check it.</p>
+          <p>UpworkSkore is the check I kept skipping, done before I spend anything. It reads the same five facts I used to check by hand and puts the number where I cannot miss it.</p>
+          <p>If a score looks wrong on a real job, send it to me. I read everything during beta and fix the bad patterns first.</p>
+          <!-- Put your name here -->
+          <p class="signed mono">builder, UpworkSkore</p>
+          <p class="changelog mono">Sep 23 · preview note moved to top of panel · toxic-only mode added · connects parser fixed</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section alt" id="beta">
+      <div class="wrap narrow">
+        <p class="eyebrow mono">Beta</p>
+        <h2>Free now, free for life.</h2>
+        <p class="sub">The 10 beta testers pay nothing and keep every future version free. Honest feedback is the whole price.</p>
+        <div class="price-shell reveal"><div class="price-card">
+          <p class="seats mono">Founding beta · 10 seats total</p>
+          <div class="price-row"><span class="price mono">$0</span><span class="per">free during beta, free for life after</span></div>
+          <ul class="includes">
+            <li>Score badges on feed and job pages, 0 to 100</li>
+            <li>Toxic-only filter and auto-expand breakdowns</li>
+            <li>Connects risk and ghost ratio on every card</li>
+            <li>Dashboard counts of scanned jobs and saved Connects</li>
+            <li>Every future version free for life</li>
+            <li>Vote on what gets built next</li>
+          </ul>
+          <form id="betaForm" class="beta-form" novalidate>
+            <label class="sr" for="betaEmail">Email for your beta invite</label>
+            <input id="betaEmail" name="email" type="email" placeholder="you@freelance.com" autocomplete="email" required />
+            <button class="btn btn-primary" type="submit">Claim a free seat</button>
+          </form>
+          <p class="form-note" id="betaNote" role="status" aria-live="polite">Beta costs nothing. Skip one ghost and keep about $2.40 in Connects.</p>
+          <p class="privacy">No tracking on this page. Your email stays in this browser until the backend goes live.</p>
+        </div></div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="wrap narrow">
+        <h2 class="reveal">Asked before you ask.</h2>
+        <div class="faq-list reveal">
+          <details open><summary>Does Upwork allow this?<span class="mark" aria-hidden="true"></span></summary><p>UpworkSkore reads the job card text your browser already loaded. It sends nothing to Upwork, clicks nothing, and calls no Upwork API. If you can see it, it can score it.</p></details>
+          <details><summary>What feeds the score?<span class="mark" aria-hidden="true"></span></summary><p>Five facts from the card and job page: total spent, hire rate, payment verification, jobs posted, and Connects required. The panel shows each one, so you can audit the number.</p></details>
+          <details><summary>Why is it free?<span class="mark" aria-hidden="true"></span></summary><p>The first 10 testers trade feedback for access: use it on real jobs, report wrong scores, answer two or three short emails. That work is the payment, and the seat stays free for every future version.</p></details>
+          <details><summary>What if it never helps me?<span class="mark" aria-hidden="true"></span></summary><p>Leave whenever. Delete the extension and keep the seat. One email about what misfired helps, if you feel like sending it.</p></details>
+          <details><summary>What happens after beta?<span class="mark" aria-hidden="true"></span></summary><p>Public launch will be paid. Tester seats stay free for life with no action and no card, ever. Layout fixes still ship to testers first, usually within 48 hours.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="final">
+      <div class="wrap narrow">
+        <h2 class="reveal">Check the score before you spend the Connects.</h2>
+        <p class="sub reveal">Ten seats. When they sell, this page comes down.</p>
+        <a class="btn btn-primary btn-lg reveal" href="#beta">Claim a free seat <span class="arr" aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap foot-inner">
+      <span>© 2026 UpworkSkore</span>
+      <span class="foot-links"><a href="./privacy.html">Privacy Policy</a><a href="./terms.html">Terms of Service</a><a href="./refund.html">Refund Policy</a></span>
+      <a href="mailto:hello@upworkskore.com">hello@upworkskore.com</a>
+    </div>
+  </footer>
+
+  <script src="./script.js" defer></script>
+</body>
+</html>
