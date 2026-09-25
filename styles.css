@@ -174,9 +174,9 @@ h2 { font-size: clamp(26px, 3vw, 34px); letter-spacing: -0.022em; line-height: 1
 .btn-lg { padding: 15px 28px; font-size: 16px; }
 .btn-primary { background: var(--btn); color: #fff; }
 .btn-primary:hover { background: var(--btn-hover); }
-.btn-ghost { border-color: var(--hairline); color: var(--ink); background: var(--card); font-weight: 600; }
-.btn-ghost:hover { border-color: var(--accent); color: var(--accent-ink); }
-[data-theme="dark"] .btn-ghost:hover { color: #8fe3ab; }
+.text-link { display: inline-flex; align-items: center; font-weight: 600; font-size: 15px; color: var(--accent-ink); text-decoration: none; padding: 12px 4px; }
+[data-theme="dark"] .text-link { color: #8fe3ab; }
+.text-link:hover { text-decoration: underline; }
 
 /* NESTED ARROW : icon lives in its own circle, drifts on hover */
 .btn .arr {
