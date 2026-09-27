@@ -108,5 +108,90 @@
       email.classList.remove('invalid');
       email.removeAttribute('aria-invalid');
     });
+
+    // Feedback form : stores to D1 via Pages Function, emails via FormSubmit.
+    var fbForm = document.getElementById('feedbackForm');
+    if (fbForm) fbForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var fbName = document.getElementById('fbName');
+      var fbEmail = document.getElementById('fbEmail');
+      var fbEmailError = document.getElementById('fbEmailError');
+      var fbMessage = document.getElementById('fbMessage');
+      var fbMessageError = document.getElementById('fbMessageError');
+      var fbNote = document.getElementById('fbNote');
+      var fbSubmit = document.getElementById('fbSubmit');
+      var honey = fbForm.querySelector('input[name="_honey"]');
+
+      var emailVal = (fbEmail.value || '').trim();
+      var messageVal = (fbMessage.value || '').trim();
+      var emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal);
+      var messageOk = messageVal.length >= 10 && messageVal.length <= 5000;
+      fbEmailError.hidden = emailOk;
+      fbMessageError.hidden = messageOk;
+      fbEmail.classList.toggle('invalid', !emailOk);
+      fbMessage.classList.toggle('invalid', !messageOk);
+      if (!emailOk) { fbEmail.focus(); return; }
+      if (!messageOk) { fbMessage.focus(); return; }
+
+      // Spam trap filled: pretend success, send nothing.
+      if (honey && honey.value) {
+        fbNote.textContent = 'Received. Thank you for writing in.';
+        fbForm.reset();
+        return;
+      }
+
+      var picked = fbForm.querySelector('input[name="category"]:checked');
+      var category = picked ? picked.value : 'wrong-score';
+      var isTester = document.getElementById('fbTester').checked;
+      var payload = {
+        name: (fbName.value || '').trim(),
+        email: emailVal,
+        isTester: isTester,
+        category: category,
+        message: messageVal
+      };
+
+      fbSubmit.disabled = true;
+      fbSubmit.textContent = 'Sending…';
+      fbNote.textContent = 'Sending your feedback…';
+
+      function postJSON(url, data) {
+        return fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(data)
+        }).then(function (res) {
+          if (!res.ok) throw new Error('bad status ' + res.status);
+          return res.json().catch(function () { return {}; });
+        });
+      }
+
+      var store = postJSON('/api/feedback', payload);
+      var mail = postJSON('https://formsubmit.co/ajax/hello@upworkskore.com', {
+        name: payload.name || '(no name)',
+        email: payload.email,
+        _subject: (isTester ? '[TESTER] ' : '') + '[UpworkSkore feedback] ' + category,
+        _template: 'table',
+        _captcha: 'false',
+        _honey: '',
+        Tester: isTester ? 'yes, one of the 10' : 'no',
+        Category: category,
+        Message: messageVal
+      });
+
+      Promise.allSettled([store, mail]).then(function (results) {
+        var saved = results[0].status === 'fulfilled' && results[0].value && results[0].value.ok !== false;
+        var mailed = results[1].status === 'fulfilled';
+        if (saved || mailed) {
+          fbNote.textContent = 'Received. Thank you for writing in.';
+          fbForm.reset();
+          fbSubmit.textContent = 'Sent';
+        } else {
+          fbNote.textContent = 'Could not send. Check your connection and try again.';
+          fbSubmit.disabled = false;
+          fbSubmit.textContent = 'Send feedback';
+        }
+      });
+    });
   });
 })();

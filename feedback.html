@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Send Feedback: UpworkSkore</title>
+  <meta name="description" content="Report a wrong score, a bug, or request a feature. Every message is stored and emailed to the builder." />
+  <link rel="icon" href="./favicon.ico" sizes="any" />
+  <link rel="stylesheet" href="./styles.css" />
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('usk-theme');
+        var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'light'); }
+    })();
+  </script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <main id="main" class="legal">
+    <div class="wrap narrow">
+      <p><a class="back-link" href="./index.html">← Back to Home</a></p>
+      <h1>Send feedback</h1>
+      <p class="lede">Wrong score, broken badge, or an idea worth building. I read everything during beta.</p>
+      <div class="price-shell"><div class="price-card">
+        <form id="feedbackForm" class="fb-form" novalidate>
+          <div class="field">
+            <label for="fbName">Name <span class="opt">(optional)</span></label>
+            <input id="fbName" name="name" type="text" placeholder="What should I call you?" autocomplete="name" maxlength="120" />
+          </div>
+          <div class="field">
+            <label for="fbEmail">Email</label>
+            <input id="fbEmail" name="email" type="email" placeholder="you@freelance.com" autocomplete="email" required />
+            <p class="fb-error" id="fbEmailError" hidden>Enter a valid email so I can reply.</p>
+          </div>
+          <div class="field check">
+            <input id="fbTester" name="tester" type="checkbox" />
+            <label for="fbTester">I am one of the 10 beta testers</label>
+          </div>
+          <div class="field">
+            <span class="fb-label" id="fbCatLabel">What is this about?</span>
+            <div class="pills" role="radiogroup" aria-labelledby="fbCatLabel">
+              <span><input id="catScore" name="category" type="radio" value="wrong-score" checked /><label for="catScore">Wrong score</label></span>
+              <span><input id="catBug" name="category" type="radio" value="bug" /><label for="catBug">Bug</label></span>
+              <span><input id="catFeature" name="category" type="radio" value="feature" /><label for="catFeature">Feature request</label></span>
+              <span><input id="catOther" name="category" type="radio" value="other" /><label for="catOther">Other</label></span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="fbMessage">Message</label>
+            <textarea id="fbMessage" name="message" rows="6" maxlength="5000" placeholder="Job link, what you saw, what you expected." required></textarea>
+            <p class="fb-error" id="fbMessageError" hidden>Write a few words so I know what to fix.</p>
+          </div>
+          <input class="hp" name="_honey" type="text" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <button class="btn btn-primary" type="submit" id="fbSubmit">Send feedback</button>
+        </form>
+        <p class="form-note" id="fbNote" role="status" aria-live="polite">Stored in our database and emailed to the builder.</p>
+        <p class="privacy">No tracking on this page. Your words go to one inbox: mine.</p>
+      </div></div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap foot-inner">
+      <span>© 2026 UpworkSkore</span>
+      <span class="foot-links"><a href="./privacy.html">Privacy Policy</a><a href="./terms.html">Terms of Service</a><a href="./refund.html">Refund Policy</a><a href="./feedback.html" aria-current="page">Feedback</a></span>
+      <a href="mailto:hello@upworkskore.com">hello@upworkskore.com</a>
+    </div>
+  </footer>
+
+  <script src="./script.js" defer></script>
+</body>
+</html>

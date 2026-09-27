@@ -381,6 +381,38 @@ button.usk-badge:active { transform: scale(0.98); }
 .foot-inner a:hover { color: var(--ink); text-decoration: underline; }
 .foot-links { display: inline-flex; gap: 16px; }
 
+/* FEEDBACK FORM : labels above inputs, errors below, native controls */
+.fb-form { display: grid; gap: 16px; }
+.field { display: grid; gap: 8px; }
+.field label, .fb-label { font-size: 14px; font-weight: 600; }
+.field .opt { font-weight: 400; color: var(--faint); }
+.field input[type="text"], .field input[type="email"], .field textarea {
+  padding: 12px 14px; border-radius: 12px; width: 100%;
+  border: 1px solid var(--hairline); background: var(--surface); color: var(--ink);
+  font-size: 15px; font-family: inherit;
+}
+.field textarea { min-height: 140px; resize: vertical; }
+.field input::placeholder, .field textarea::placeholder { color: var(--muted); }
+.field input:focus-visible, .field textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+.field input.invalid, .field textarea.invalid { border-color: #d64545; }
+[data-theme="dark"] .field input.invalid, [data-theme="dark"] .field textarea.invalid { border-color: #ffa3a3; }
+.fb-error { margin: 0; font-size: 13.5px; color: #b3261e; }
+[data-theme="dark"] .fb-error { color: #ff9d9d; }
+.field.check { grid-template-columns: auto 1fr; align-items: center; gap: 10px; }
+.field.check input { width: 18px; height: 18px; accent-color: var(--accent); }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pills input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.pills label {
+  display: inline-block; font-size: 13.5px; font-weight: 600; cursor: pointer;
+  border: 1px solid var(--hairline); background: var(--surface); color: var(--muted);
+  border-radius: 999px; padding: 7px 14px;
+}
+.pills input:checked + label { background: var(--ink); border-color: var(--ink); color: var(--canvas); }
+.pills input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
+.hp { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; opacity: 0; }
+.note-card a { color: var(--accent-ink); font-weight: 600; }
+[data-theme="dark"] .note-card a { color: #8fe3ab; }
+
 /* REVEAL : single motion device: fade up on entry, staggered by --d */
 .reveal { opacity: 0; transform: translateY(18px); transition: opacity 560ms var(--ease), transform 560ms var(--ease); transition-delay: var(--d, 0s); }
 .reveal.in { opacity: 1; transform: none; }
