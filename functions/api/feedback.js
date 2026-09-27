@@ -14,7 +14,8 @@ function json(obj, status) {
 
 export async function onRequestPost({ request, env }) {
   try {
-    if (!env.FEEDBACK_DB) return json({ ok: false, error: 'storage_unbound' }, 500);
+    const db = env.FEEDBACK_DB || env.DB;
+    if (!db) return json({ ok: false, error: 'storage_unbound' }, 500);
     const ct = request.headers.get('content-type') || '';
     if (ct.indexOf('application/json') === -1) return json({ ok: false, error: 'bad_request' }, 400);
 
@@ -29,7 +30,7 @@ export async function onRequestPost({ request, env }) {
     if (CATEGORIES.indexOf(category) === -1) return json({ ok: false, error: 'bad_category' }, 400);
     if (message.length < 10 || message.length > 5000) return json({ ok: false, error: 'bad_message' }, 400);
 
-    await env.FEEDBACK_DB.prepare(
+    await db.prepare(
       'INSERT INTO feedback (name, email, is_tester, category, message) VALUES (?, ?, ?, ?, ?)'
     ).bind(name || null, email, isTester, category, message).run();
 
