@@ -85,6 +85,22 @@
     var email = document.getElementById('betaEmail');
     var note = document.getElementById('betaNote');
     var spots = document.getElementById('spotsLeft');
+    var seatsOpen = null;
+    function renderSeats() {
+      if (spots && seatsOpen !== null) spots.textContent = seatsOpen + ' of 10 seats open';
+    }
+    // Live seat count. Static "Only 10 seats" stays if the call fails.
+    try {
+      fetch('/api/seats').then(function (res) {
+        if (!res.ok) throw new Error('bad status');
+        return res.json();
+      }).then(function (data) {
+        if (data && data.ok === true && typeof data.open === 'number') {
+          seatsOpen = data.open;
+          renderSeats();
+        }
+      }).catch(function () { /* keep static fallback */ });
+    } catch (e) { /* noop */ }
     var submit = form ? form.querySelector('button[type="submit"]') : null;
     if (form) form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -139,7 +155,8 @@
           note.textContent = 'Seat held for ' + val + '. Confirmation arrives within 48 hours with the install link.';
           submit.textContent = 'Seat held';
           email.disabled = true;
-          if (spots) spots.textContent = '6 of 10 seats open';
+          if (seatsOpen !== null && seatsOpen > 0) seatsOpen -= 1;
+          renderSeats();
         } else {
           note.textContent = 'Could not hold your seat. Check your connection and try again.';
           submit.disabled = false;
