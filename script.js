@@ -123,7 +123,7 @@
       }
 
       var store = postJSON('/api/beta', { email: val, _honey: '' });
-      var mail = postJSON('https://formsubmit.co/ajax/hello@upworkskore.com', {
+      var mail = postJSON('https://formsubmit.co/ajax/upworkskore@proton.me', {
         email: val,
         _subject: '[SEAT] New beta seat claimed',
         _template: 'table',
@@ -210,7 +210,7 @@
       }
 
       var store = postJSON('/api/feedback', payload);
-      var mail = postJSON('https://formsubmit.co/ajax/hello@upworkskore.com', {
+      var mail = postJSON('https://formsubmit.co/ajax/upworkskore@proton.me', {
         name: payload.name || '(no name)',
         email: payload.email,
         _subject: (isTester ? '[TESTER] ' : '') + '[UpworkSkore feedback] ' + category,
