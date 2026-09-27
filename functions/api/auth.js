@@ -5,11 +5,24 @@
  * locally on success. No sessions server-side.
  * Uses the same D1 binding as feedback (FEEDBACK_DB or DB).
  */
+// Extension popups may only call cross-origin hosts with permission or an
+// explicit CORS grant. These endpoints are public and cookie-free, so a
+// wildcard grant is appropriate.
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type'
+};
+
 function json(obj, status) {
   return new Response(JSON.stringify(obj), {
     status,
-    headers: { 'content-type': 'application/json' }
+    headers: Object.assign({ 'content-type': 'application/json' }, CORS)
   });
+}
+
+export async function onRequestOptions() {
+  return new Response(null, { status: 204, headers: CORS });
 }
 
 async function hashPassword(email, password) {

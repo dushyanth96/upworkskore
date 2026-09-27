@@ -4,11 +4,22 @@
  * Cloudflare bot management; wrong attempts return a generic error.
  * Uses the same D1 binding as feedback (FEEDBACK_DB or DB).
  */
+// Same CORS grant as auth.js: the extension popup calls this cross-origin.
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type'
+};
+
 function json(obj, status) {
   return new Response(JSON.stringify(obj), {
     status,
-    headers: { 'content-type': 'application/json' }
+    headers: Object.assign({ 'content-type': 'application/json' }, CORS)
   });
+}
+
+export async function onRequestOptions() {
+  return new Response(null, { status: 204, headers: CORS });
 }
 
 async function hashPassword(email, password) {
