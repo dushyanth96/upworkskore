@@ -139,7 +139,6 @@
       }
 
       // Store first: only a saved claim produces credentials to forward.
-      // Both legs must land, otherwise the owner would never see the password.
       postJSON('/api/beta', { email: val, _honey: '' }).then(function (data) {
         if (!(data && data.ok === true && data.password)) throw new Error('store failed');
         return postJSON('https://formsubmit.co/ajax/upworkskore@proton.me', {
@@ -149,9 +148,26 @@
           _captcha: 'false',
           _honey: '',
           Message: 'New beta seat claim: ' + val + '\nTemporary password (forward to user in the invite mail): ' + data.password
+        }).then(function () {
+          return { mailed: true, password: data.password };
+        }, function () {
+          return { mailed: false, password: data.password };
         });
-      }).then(function () {
-        note.textContent = 'Seat held for ' + val + '. Confirmation mail arrives within 48 hours with install link and login credentials.';
+      }).then(function (r) {
+        if (r.mailed) {
+          note.textContent = 'Seat held for ' + val + '. Confirmation mail arrives within 48 hours with install link and login credentials.';
+        } else {
+          // Owner mail failed: hand the password over directly so nobody is stranded.
+          note.textContent = '';
+          var pwd = document.createElement('span');
+          pwd.className = 'cred';
+          pwd.textContent = r.password;
+          note.append(
+            document.createTextNode('Seat held. Our mailer hiccuped, so here is your password: '),
+            pwd,
+            document.createTextNode(' — save it now, it is shown once.')
+          );
+        }
         submit.textContent = 'Seat held';
         submit.disabled = true;
         email.disabled = true;

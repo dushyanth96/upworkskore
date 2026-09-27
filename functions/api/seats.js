@@ -13,11 +13,16 @@ function json(obj, status) {
 export async function onRequestGet({ env }) {
   try {
     const db = env.FEEDBACK_DB || env.DB;
-    if (!db) return json({ ok: false }, 500);
-    const row = await db.prepare('SELECT COUNT(*) AS taken FROM beta_signups').first();
-    const taken = (row && row.taken) || 0;
+    if (!db) return json({ ok: false, error: 'storage_unbound' }, 500);
+    let taken = 0;
+    try {
+      const row = await db.prepare('SELECT COUNT(*) AS taken FROM beta_signups').first();
+      taken = (row && row.taken) || 0;
+    } catch (e) {
+      return json({ ok: false, error: 'query_failed' }, 500);
+    }
     return json({ ok: true, taken: taken, open: Math.max(0, 10 - taken) }, 200);
   } catch (e) {
-    return json({ ok: false }, 500);
+    return json({ ok: false, error: 'server' }, 500);
   }
 }

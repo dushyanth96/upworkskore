@@ -43,9 +43,13 @@ export async function onRequestPost({ request, env }) {
     for (const b of rand) password += alphabet[b % alphabet.length];
 
     const passwordHash = await hashPassword(email, password);
-    await db.prepare(
-      'INSERT INTO beta_signups (email, password_hash) VALUES (?, ?) ON CONFLICT(email) DO UPDATE SET password_hash=excluded.password_hash'
-    ).bind(email, passwordHash).run();
+    try {
+      await db.prepare(
+        'INSERT INTO beta_signups (email, password_hash) VALUES (?, ?) ON CONFLICT(email) DO UPDATE SET password_hash=excluded.password_hash'
+      ).bind(email, passwordHash).run();
+    } catch (e) {
+      return json({ ok: false, error: 'query_failed' }, 500);
+    }
 
     return json({ ok: true, password }, 200);
   } catch (e) {

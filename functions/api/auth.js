@@ -35,17 +35,26 @@ export async function onRequestPost({ request, env }) {
     const password = String(body.password || '');
     if (!password) return json({ ok: false, error: 'bad_password' }, 400);
 
-    const row = await db.prepare(
-      'SELECT id, password_hash FROM beta_signups WHERE email = ? LIMIT 1'
-    ).bind(email).first();
+    let row;
+    try {
+      row = await db.prepare(
+        'SELECT id, password_hash FROM beta_signups WHERE email = ? LIMIT 1'
+      ).bind(email).first();
+    } catch (e) {
+      return json({ ok: false, error: 'query_failed' }, 500);
+    }
 
     if (!row) return json({ ok: false, error: 'not_on_list' }, 200);
 
     const passwordHash = await hashPassword(email, password);
     if (!row.password_hash) {
-      await db.prepare(
-        'UPDATE beta_signups SET password_hash = ? WHERE id = ?'
-      ).bind(passwordHash, row.id).run();
+      try {
+        await db.prepare(
+          'UPDATE beta_signups SET password_hash = ? WHERE id = ?'
+        ).bind(passwordHash, row.id).run();
+      } catch (e) {
+        return json({ ok: false, error: 'query_failed' }, 500);
+      }
       return json({ ok: true }, 200);
     }
 

@@ -30,9 +30,13 @@ export async function onRequestPost({ request, env }) {
     if (CATEGORIES.indexOf(category) === -1) return json({ ok: false, error: 'bad_category' }, 400);
     if (message.length < 10 || message.length > 5000) return json({ ok: false, error: 'bad_message' }, 400);
 
-    await db.prepare(
-      'INSERT INTO feedback (name, email, is_tester, category, message) VALUES (?, ?, ?, ?, ?)'
-    ).bind(name || null, email, isTester, category, message).run();
+    try {
+      await db.prepare(
+        'INSERT INTO feedback (name, email, is_tester, category, message) VALUES (?, ?, ?, ?, ?)'
+      ).bind(name || null, email, isTester, category, message).run();
+    } catch (e) {
+      return json({ ok: false, error: 'query_failed' }, 500);
+    }
 
     return json({ ok: true }, 200);
   } catch (e) {
