@@ -98,11 +98,54 @@
       }
       email.classList.remove('invalid');
       email.removeAttribute('aria-invalid');
-      try { localStorage.setItem('usk-beta-email', val); } catch (err) { /* noop */ }
-      note.textContent = 'Seat held for ' + val + '. Watch your inbox for the install link.';
-      if (submit) { submit.textContent = 'Seat held'; submit.disabled = true; }
-      email.disabled = true;
-      if (spots) spots.textContent = '6 of 10 seats open';
+
+      // Spam trap filled: pretend success, send nothing.
+      var honey = form.querySelector('input[name="_honey"]');
+      if (honey && honey.value) {
+        note.textContent = 'Seat held. Watch your inbox for the install link.';
+        form.reset();
+        return;
+      }
+
+      submit.disabled = true;
+      submit.textContent = 'Holding…';
+      note.textContent = 'Holding your seat…';
+
+      function postJSON(url, data) {
+        return fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(data)
+        }).then(function (res) {
+          if (!res.ok) throw new Error('bad status ' + res.status);
+          return res.json().catch(function () { return {}; });
+        });
+      }
+
+      var store = postJSON('/api/beta', { email: val, _honey: '' });
+      var mail = postJSON('https://formsubmit.co/ajax/hello@upworkskore.com', {
+        email: val,
+        _subject: '[SEAT] New beta seat claimed',
+        _template: 'table',
+        _captcha: 'false',
+        _honey: '',
+        Message: 'New beta seat claim: ' + val
+      });
+
+      Promise.allSettled([store, mail]).then(function (results) {
+        var saved = results[0].status === 'fulfilled' && results[0].value && results[0].value.ok !== false;
+        var mailed = results[1].status === 'fulfilled';
+        if (saved || mailed) {
+          note.textContent = 'Seat held for ' + val + '. Watch your inbox for the install link.';
+          submit.textContent = 'Seat held';
+          email.disabled = true;
+          if (spots) spots.textContent = '6 of 10 seats open';
+        } else {
+          note.textContent = 'Could not hold your seat. Check your connection and try again.';
+          submit.disabled = false;
+          submit.textContent = 'Claim a free seat';
+        }
+      });
     });
     if (email) email.addEventListener('input', function () {
       email.classList.remove('invalid');
