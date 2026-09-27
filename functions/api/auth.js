@@ -1,7 +1,8 @@
 /* Cloudflare Pages Function: POST /api/auth
- * Beta allow-list check. Returns { ok: true } only when the email claimed
- * a seat (exists in beta_signups). The extension signs the user in locally
- * on success. No passwords, no sessions server-side.
+ * Beta sign-in: the email must sit in beta_signups and the password must
+ * match its salted SHA-256 hash. Rows claimed before passwords existed
+ * get their hash set on first sign-in. The extension signs the user in
+ * locally on success. No sessions server-side.
  * Uses the same D1 binding as feedback (FEEDBACK_DB or DB).
  */
 function json(obj, status) {
@@ -9,6 +10,14 @@ function json(obj, status) {
     status,
     headers: { 'content-type': 'application/json' }
   });
+}
+
+async function hashPassword(email, password) {
+  const bytes = await crypto.subtle.digest(
+    'SHA-256',
+    new TextEncoder().encode(email + ':' + password)
+  );
+  return [...new Uint8Array(bytes)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
 
 export async function onRequestPost({ request, env }) {
@@ -23,11 +32,24 @@ export async function onRequestPost({ request, env }) {
     const email = String(body.email || '').trim().toLowerCase().slice(0, 254);
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ ok: false, error: 'bad_email' }, 400);
 
+    const password = String(body.password || '');
+    if (!password) return json({ ok: false, error: 'bad_password' }, 400);
+
     const row = await db.prepare(
-      'SELECT id FROM beta_signups WHERE email = ? LIMIT 1'
+      'SELECT id, password_hash FROM beta_signups WHERE email = ? LIMIT 1'
     ).bind(email).first();
 
     if (!row) return json({ ok: false, error: 'not_on_list' }, 200);
+
+    const passwordHash = await hashPassword(email, password);
+    if (!row.password_hash) {
+      await db.prepare(
+        'UPDATE beta_signups SET password_hash = ? WHERE id = ?'
+      ).bind(passwordHash, row.id).run();
+      return json({ ok: true }, 200);
+    }
+
+    if (row.password_hash !== passwordHash) return json({ ok: false, error: 'wrong_password' }, 200);
     return json({ ok: true }, 200);
   } catch (e) {
     return json({ ok: false, error: 'server' }, 500);
