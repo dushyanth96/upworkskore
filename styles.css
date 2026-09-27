@@ -330,9 +330,7 @@ button.usk-badge:active { transform: scale(0.98); }
 .price-row { display: flex; align-items: baseline; gap: 12px; margin: 14px 0 6px; flex-wrap: wrap; }
 .price { font-size: 50px; font-weight: 700; letter-spacing: -0.032em; }
 .per { color: var(--muted); font-size: 14px; }
-.includes { list-style: none; margin: 14px 0 22px; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; font-size: 15px; }
-.includes li { padding: 9px 0 9px 26px; position: relative; border-bottom: 1px solid var(--hairline); }
-.includes li::before { content: "✓"; position: absolute; left: 2px; color: var(--accent); font-weight: 700; }
+
 .beta-form { display: flex; gap: 10px; }
 .beta-form input {
   flex: 1; padding: 12px 14px; border-radius: 12px;
@@ -434,6 +432,5 @@ button.usk-badge:active { transform: scale(0.98); }
   .nav-actions { margin-left: auto; }
   .section { padding: 56px 0; }
   .beta-form { flex-direction: column; }
-  .includes { grid-template-columns: 1fr; }
   .steps li { grid-template-columns: 44px 1fr; gap: 12px; }
 }

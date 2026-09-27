@@ -136,7 +136,7 @@
         var saved = results[0].status === 'fulfilled' && results[0].value && results[0].value.ok !== false;
         var mailed = results[1].status === 'fulfilled';
         if (saved || mailed) {
-          note.textContent = 'Seat held for ' + val + '. Watch your inbox for the install link.';
+          note.textContent = 'Seat held for ' + val + '. Confirmation arrives within 48 hours with the install link.';
           submit.textContent = 'Seat held';
           email.disabled = true;
           if (spots) spots.textContent = '6 of 10 seats open';
