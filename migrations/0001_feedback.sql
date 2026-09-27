@@ -1,4 +1,3 @@
--- UpworkSkore feedback archive. Apply once: wrangler d1 execute upworkskore-feedback --file migrations/0001_feedback.sql
 CREATE TABLE IF NOT EXISTS feedback (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT,
