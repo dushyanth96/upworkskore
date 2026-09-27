@@ -115,14 +115,6 @@
       email.classList.remove('invalid');
       email.removeAttribute('aria-invalid');
 
-      var betaPassword = document.getElementById('betaPassword');
-      var passVal = betaPassword ? betaPassword.value : '';
-      if (passVal.length < 8) {
-        note.textContent = 'Pick a password of 8 characters or more. You will use it to sign in to the extension.';
-        if (betaPassword) betaPassword.focus();
-        return;
-      }
-
       // Spam trap filled: pretend success, send nothing.
       var honey = form.querySelector('input[name="_honey"]');
       if (honey && honey.value) {
@@ -146,7 +138,7 @@
         });
       }
 
-      var store = postJSON('/api/beta', { email: val, password: passVal, _honey: '' });
+      var store = postJSON('/api/beta', { email: val, _honey: '' });
       var mail = postJSON('https://formsubmit.co/ajax/upworkskore@proton.me', {
         email: val,
         _subject: '[SEAT] New beta seat claimed',
@@ -157,11 +149,19 @@
       });
 
       Promise.allSettled([store, mail]).then(function (results) {
-        var saved = results[0].status === 'fulfilled' && results[0].value && results[0].value.ok !== false;
-        var mailed = results[1].status === 'fulfilled';
-        if (saved || mailed) {
-          note.textContent = 'Seat held for ' + val + '. Confirmation arrives within 48 hours with the install link.';
+        var data = results[0].status === 'fulfilled' ? results[0].value : null;
+        if (data && data.ok === true && data.password) {
+          note.textContent = '';
+          var pwd = document.createElement('span');
+          pwd.className = 'cred';
+          pwd.textContent = data.password;
+          note.append(
+            document.createTextNode('Seat held for ' + val + '. Your password is '),
+            pwd,
+            document.createTextNode(' — save it now, it is shown once.')
+          );
           submit.textContent = 'Seat held';
+          submit.disabled = true;
           email.disabled = true;
           if (seatsOpen !== null && seatsOpen > 0) seatsOpen -= 1;
           renderSeats();

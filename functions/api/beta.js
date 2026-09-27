@@ -1,9 +1,9 @@
 /* Cloudflare Pages Function: POST /api/beta
- * Validates a beta seat claim and stores it in D1: email plus a salted
- * SHA-256 hash of the password. Plaintext passwords are never stored and
- * never emailed. Duplicate emails are silently accepted so seat state
- * never leaks. A filled honeypot returns success without writing
- * anything or notifying anyone.
+ * Claims a beta seat with email only. The server generates a readable
+ * password, stores its salted SHA-256 hash in D1, and returns the
+ * plaintext once so the page can show it. Plaintext is never stored and
+ * never emailed. Re-claims issue a fresh password (built-in reset).
+ * A filled honeypot returns success without writing anything.
  * Uses the same D1 binding as feedback (FEEDBACK_DB or DB).
  */
 function json(obj, status) {
@@ -37,15 +37,17 @@ export async function onRequestPost({ request, env }) {
     const email = String(body.email || '').trim().toLowerCase().slice(0, 254);
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return json({ ok: false, error: 'bad_email' }, 400);
 
-    const password = String(body.password || '');
-    if (password.length < 8 || password.length > 200) return json({ ok: false, error: 'bad_password' }, 400);
+    const alphabet = 'abcdefghjkmnpqrstuvwxyz23456789';
+    const rand = crypto.getRandomValues(new Uint8Array(12));
+    let password = '';
+    for (const b of rand) password += alphabet[b % alphabet.length];
 
     const passwordHash = await hashPassword(email, password);
     await db.prepare(
       'INSERT INTO beta_signups (email, password_hash) VALUES (?, ?) ON CONFLICT(email) DO UPDATE SET password_hash=excluded.password_hash'
     ).bind(email, passwordHash).run();
 
-    return json({ ok: true }, 200);
+    return json({ ok: true, password }, 200);
   } catch (e) {
     return json({ ok: false, error: 'server' }, 500);
   }
