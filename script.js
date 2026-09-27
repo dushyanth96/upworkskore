@@ -138,38 +138,29 @@
         });
       }
 
-      var store = postJSON('/api/beta', { email: val, _honey: '' });
-      var mail = postJSON('https://formsubmit.co/ajax/upworkskore@proton.me', {
-        email: val,
-        _subject: '[SEAT] New beta seat claimed',
-        _template: 'table',
-        _captcha: 'false',
-        _honey: '',
-        Message: 'New beta seat claim: ' + val
-      });
-
-      Promise.allSettled([store, mail]).then(function (results) {
-        var data = results[0].status === 'fulfilled' ? results[0].value : null;
-        if (data && data.ok === true && data.password) {
-          note.textContent = '';
-          var pwd = document.createElement('span');
-          pwd.className = 'cred';
-          pwd.textContent = data.password;
-          note.append(
-            document.createTextNode('Seat held for ' + val + '. Your password is '),
-            pwd,
-            document.createTextNode(' — save it now, it is shown once.')
-          );
-          submit.textContent = 'Seat held';
-          submit.disabled = true;
-          email.disabled = true;
-          if (seatsOpen !== null && seatsOpen > 0) seatsOpen -= 1;
-          renderSeats();
-        } else {
-          note.textContent = 'Could not hold your seat. Check your connection and try again.';
-          submit.disabled = false;
-          submit.textContent = 'Claim a free seat';
-        }
+      // Store first: only a saved claim produces credentials to forward.
+      // Both legs must land, otherwise the owner would never see the password.
+      postJSON('/api/beta', { email: val, _honey: '' }).then(function (data) {
+        if (!(data && data.ok === true && data.password)) throw new Error('store failed');
+        return postJSON('https://formsubmit.co/ajax/upworkskore@proton.me', {
+          email: val,
+          _subject: '[SEAT] New beta seat claimed',
+          _template: 'table',
+          _captcha: 'false',
+          _honey: '',
+          Message: 'New beta seat claim: ' + val + '\nTemporary password (forward to user in the invite mail): ' + data.password
+        });
+      }).then(function () {
+        note.textContent = 'Seat held for ' + val + '. Confirmation mail arrives within 48 hours with install link and login credentials.';
+        submit.textContent = 'Seat held';
+        submit.disabled = true;
+        email.disabled = true;
+        if (seatsOpen !== null && seatsOpen > 0) seatsOpen -= 1;
+        renderSeats();
+      }).catch(function () {
+        note.textContent = 'Could not hold your seat. Check your connection and try again.';
+        submit.disabled = false;
+        submit.textContent = 'Claim a free seat';
       });
     });
     if (email) email.addEventListener('input', function () {
