@@ -80,7 +80,7 @@
       }
     } catch (e) { /* noop */ }
 
-    // Beta form : front-end only. Point to the Supabase endpoint at launch.
+    // Beta form : posts to /api/beta (D1) plus the form mailer in parallel.
     var form = document.getElementById('betaForm');
     var email = document.getElementById('betaEmail');
     var note = document.getElementById('betaNote');
@@ -165,7 +165,7 @@
           note.append(
             document.createTextNode('Seat held. Our mailer hiccuped, so here is your password: '),
             pwd,
-            document.createTextNode(' — save it now, it is shown once.')
+            document.createTextNode('. Save it now, it is shown once.')
           );
         }
         submit.textContent = 'Seat held';
