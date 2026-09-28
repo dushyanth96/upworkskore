@@ -278,8 +278,8 @@ button.usk-badge:active { transform: scale(0.98); }
 [data-theme="dark"] .meter.yellow .fill { background: #f2d67c; }
 .meter.red .fill { background: #d64545; }
 [data-theme="dark"] .meter.red .fill { background: #ffa3a3; }
-.track.empty { display: flex; align-items: center; justify-content: center; height: 26px; background: transparent; border-style: dashed; }
-.track.empty span { font-size: 11px; letter-spacing: 0.08em; color: var(--faint); }
+.grey-sample { display: flex; align-items: center; padding: 4px 0 2px; }
+.usk-badge.grey { background: var(--grey-bg); color: var(--grey-ink); border-color: var(--grey-line); }
 .meter p { margin: 10px 0 0; font-size: 14.5px; color: var(--muted); }
 
 /* ROADMAP : V1 vs V2 comparison, two columns to one on mobile */
